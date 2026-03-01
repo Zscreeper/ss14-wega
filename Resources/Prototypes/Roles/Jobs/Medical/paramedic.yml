@@ -14,6 +14,7 @@
   access:
   - Medical
   - Maintenance
+  - LavalandAvanpost # Corvax-Wega-Lavaland
   extendedAccess:
   - Chemistry
   # Corvax-Wega-Surgery-start
