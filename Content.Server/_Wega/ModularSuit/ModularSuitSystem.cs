@@ -44,15 +44,12 @@ public sealed partial class ModularSuitSystem : SharedModularSuitSystem
         SubscribeLocalEvent<ModularSuitComponent, EntityTerminatingEvent>(OnTerminating);
         SubscribeLocalEvent<ModularSuitComponent, GetVerbsEvent<Verb>>(OnGetVerbs);
         SubscribeLocalEvent<ModularSuitComponent, ModularSuitExtractDoAfterEvent>(OnDoAfterComplete);
+        SubscribeLocalEvent<ModularSuitComponent, InteractUsingEvent>(OnSuitInteractUsing);
 
         SubscribeLocalEvent<ModularSuitPreassembledComponent, MapInitEvent>(OnPreassembledMapInit);
 
         SubscribeLocalEvent<ModularSuitPartComponent, GetVerbsEvent<Verb>>(OnGetPartVerbs);
         SubscribeLocalEvent<ModularSuitPartComponent, ModularSuitPartSealDoAfterEvent>(OnPartDoAfterComplete);
-
-        SubscribeLocalEvent<ModularSuitCoreComponent, AfterInteractEvent>(OnCoreAfterInteract);
-        SubscribeLocalEvent<ModularSuitModuleComponent, AfterInteractEvent>(OnModuleAfterInteract);
-        SubscribeLocalEvent<ModularSuitPartComponent, AfterInteractEvent>(OnPartAfterInteract);
     }
 
     private void OnSuitInit(Entity<ModularSuitComponent> ent, ref ComponentInit args)
@@ -287,6 +284,112 @@ public sealed partial class ModularSuitSystem : SharedModularSuitSystem
         };
     }
 
+    private void OnSuitInteractUsing(Entity<ModularSuitComponent> suit, ref InteractUsingEvent args)
+    {
+        if (args.Handled)
+            return;
+
+        var used = args.Used;
+
+        // Core
+        if (TryComp<ModularSuitCoreComponent>(used, out var core))
+        {
+            if (_lock.IsLocked(suit.Owner) || !TryComp<WiresPanelComponent>(suit, out var panel) || !panel.Open)
+            {
+                Popup.PopupEntity(Loc.GetString("modsuit-panel-closed"), suit.Owner, args.User);
+                return;
+            }
+
+            var container = Container.GetContainer(suit, CoreContainer);
+            if (container.ContainedEntities.Count > 0)
+            {
+                Popup.PopupEntity(Loc.GetString("modsuit-core-slot-occupied"), suit.Owner, args.User);
+                return;
+            }
+
+            if (Container.Insert(used, container))
+            {
+                Popup.PopupEntity(Loc.GetString("modsuit-core-installed"), suit.Owner, args.User);
+                CheckSuitAssembly(suit.Owner);
+                _audio.PlayPredicted(suit.Comp.InsertSound, suit.Owner, null);
+                UpdateUiState(suit);
+                args.Handled = true;
+            }
+            return;
+        }
+
+        // Part
+        if (TryComp<ModularSuitPartComponent>(used, out var part))
+        {
+            if (_lock.IsLocked(suit.Owner) || !TryComp<WiresPanelComponent>(suit, out var panel) || !panel.Open)
+            {
+                Popup.PopupEntity(Loc.GetString("modsuit-panel-closed"), suit.Owner, args.User);
+                return;
+            }
+
+            if (suit.Comp.Wearer != null)
+            {
+                Popup.PopupEntity(Loc.GetString("modsuit-cant-install-part-worn"), suit.Owner, args.User);
+                return;
+            }
+
+            if (TryComp<ModularSuitEquippedComponent>(suit, out var equipped))
+            {
+                foreach (var (_, partUid) in equipped.EquippedParts)
+                {
+                    if (TryComp<ModularSuitPartComponent>(partUid, out var existingPart) &&
+                        existingPart.PartType == part.PartType)
+                    {
+                        Popup.PopupEntity(Loc.GetString("modsuit-part-already-installed"), suit.Owner, args.User);
+                        return;
+                    }
+                }
+            }
+
+            var container = Container.GetContainer(suit, PartContainer);
+            foreach (var existing in container.ContainedEntities)
+            {
+                if (TryComp<ModularSuitPartComponent>(existing, out var existingPart) &&
+                    existingPart.PartType == part.PartType)
+                {
+                    Popup.PopupEntity(Loc.GetString("modsuit-part-already-installed"), suit.Owner, args.User);
+                    return;
+                }
+            }
+
+            if (Container.Insert(used, container))
+            {
+                Popup.PopupEntity(Loc.GetString("modsuit-part-installed", ("part", part.PartType.ToString())),
+                    suit.Owner, args.User);
+                CheckSuitAssembly(suit.Owner);
+                _audio.PlayPredicted(suit.Comp.InsertSound, suit.Owner, null);
+                Toggle.TryDeactivate(used, args.User, false);
+                UpdateUiState(suit);
+                args.Handled = true;
+            }
+            return;
+        }
+
+        // Module
+        if (TryComp<ModularSuitModuleComponent>(used, out var module))
+        {
+            if (_lock.IsLocked(suit.Owner) || !TryComp<WiresPanelComponent>(suit, out var panel) || !panel.Open)
+            {
+                Popup.PopupEntity(Loc.GetString("modsuit-panel-closed"), suit.Owner, args.User);
+                return;
+            }
+
+            if (module.ModulePart != null && !HasPartInstalled(suit.Owner, module.ModulePart.Value))
+            {
+                var partName = Loc.GetString($"modsuit-part-{module.ModulePart.Value.ToString().ToLower()}");
+                Popup.PopupEntity(Loc.GetString("modsuit-module-requires-part", ("part", partName)), suit.Owner, args.User);
+                return;
+            }
+
+            args.Handled = TryInstallModule(suit, (used, module), args.User);
+        }
+    }
+
     private void OnPreassembledMapInit(Entity<ModularSuitPreassembledComponent> suit, ref MapInitEvent args)
     {
         if (!TryComp<ModularSuitComponent>(suit, out var modularSuit))
@@ -431,119 +534,6 @@ public sealed partial class ModularSuitSystem : SharedModularSuitSystem
                 }
             }
         }
-    }
-
-    private void OnCoreAfterInteract(Entity<ModularSuitCoreComponent> core, ref AfterInteractEvent args)
-    {
-        if (args.Handled || !args.CanReach || args.Target == null)
-            return;
-
-        if (!TryComp<ModularSuitComponent>(args.Target, out var suit))
-            return;
-
-        if (_lock.IsLocked(args.Target.Value) || !TryComp<WiresPanelComponent>(args.Target, out var panel) || !panel.Open)
-        {
-            Popup.PopupEntity(Loc.GetString("modsuit-panel-closed"), args.Target.Value, args.User);
-            return;
-        }
-
-        var container = Container.GetContainer(args.Target.Value, CoreContainer);
-        if (container.ContainedEntities.Count > 0)
-        {
-            Popup.PopupEntity(Loc.GetString("modsuit-core-slot-occupied"), args.Target.Value, args.User);
-            return;
-        }
-
-        if (Container.Insert(core.Owner, container))
-        {
-            Popup.PopupEntity(Loc.GetString("modsuit-core-installed"), args.Target.Value, args.User);
-
-            args.Handled = true;
-            CheckSuitAssembly(args.Target.Value);
-            _audio.PlayPredicted(suit.InsertSound, args.Target.Value, null);
-
-            UpdateUiState((args.Target.Value, suit));
-        }
-    }
-
-    private void OnPartAfterInteract(Entity<ModularSuitPartComponent> part, ref AfterInteractEvent args)
-    {
-        if (args.Handled || !args.CanReach || args.Target == null)
-            return;
-
-        if (!TryComp<ModularSuitComponent>(args.Target, out var suit) || suit.Wearer != null)
-            return;
-
-        if (_lock.IsLocked(args.Target.Value) || !TryComp<WiresPanelComponent>(args.Target, out var panel) || !panel.Open)
-        {
-            Popup.PopupEntity(Loc.GetString("modsuit-panel-closed"), args.Target.Value, args.User);
-            return;
-        }
-
-        if (TryComp<ModularSuitEquippedComponent>(args.Target.Value, out var equipped))
-        {
-            foreach (var (_, partUid) in equipped.EquippedParts)
-            {
-                if (TryComp<ModularSuitPartComponent>(partUid, out var existingPart) &&
-                    existingPart.PartType == part.Comp.PartType)
-                {
-                    Popup.PopupEntity(Loc.GetString("modsuit-part-already-installed"), args.Target.Value, args.User);
-                    return;
-                }
-            }
-        }
-
-        var container = Container.GetContainer(args.Target.Value, PartContainer);
-        foreach (var existing in container.ContainedEntities)
-        {
-            if (TryComp<ModularSuitPartComponent>(existing, out var existingPart) &&
-                existingPart.PartType == part.Comp.PartType)
-            {
-                Popup.PopupEntity(Loc.GetString("modsuit-part-already-installed"), args.Target.Value, args.User);
-                return;
-            }
-        }
-
-        if (Container.Insert(part.Owner, container))
-        {
-            Popup.PopupEntity(Loc.GetString("modsuit-part-installed", ("part", part.Comp.PartType.ToString())),
-                args.Target.Value, args.User);
-
-            args.Handled = true;
-            CheckSuitAssembly(args.Target.Value);
-
-            _audio.PlayPredicted(suit.InsertSound, args.Target.Value, null);
-            Toggle.TryDeactivate(part.Owner, args.User, false);
-
-            UpdateUiState((args.Target.Value, suit));
-        }
-    }
-
-    private void OnModuleAfterInteract(Entity<ModularSuitModuleComponent> module, ref AfterInteractEvent args)
-    {
-        if (args.Handled || !args.CanReach || args.Target == null)
-            return;
-
-        if (!TryComp<ModularSuitComponent>(args.Target, out var suit))
-            return;
-
-        if (_lock.IsLocked(args.Target.Value) || !TryComp<WiresPanelComponent>(args.Target, out var panel) || !panel.Open)
-        {
-            Popup.PopupEntity(Loc.GetString("modsuit-panel-closed"), args.Target.Value, args.User);
-            return;
-        }
-
-        if (module.Comp.ModulePart != null)
-        {
-            if (!HasPartInstalled(args.Target.Value, module.Comp.ModulePart.Value))
-            {
-                var partName = Loc.GetString($"modsuit-part-{module.Comp.ModulePart.Value.ToString().ToLower()}");
-                Popup.PopupEntity(Loc.GetString("modsuit-module-requires-part", ("part", partName)), args.Target.Value, args.User);
-                return;
-            }
-        }
-
-        args.Handled = TryInstallModule((args.Target.Value, suit), module, args.User);
     }
 
     private bool TryInstallModule(Entity<ModularSuitComponent> suit, Entity<ModularSuitModuleComponent> module, EntityUid user)
