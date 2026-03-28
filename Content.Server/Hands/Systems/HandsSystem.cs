@@ -3,7 +3,6 @@ using System.Numerics;
 using Content.Server.Stack;
 using Content.Server.Stunnable;
 using Content.Shared.ActionBlocker;
-using Content.Shared.Body.Part;
 using Content.Shared.CombatMode;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Explosion;
@@ -51,9 +50,6 @@ namespace Content.Server.Hands.Systems
             base.Initialize();
 
             SubscribeLocalEvent<HandsComponent, DisarmedEvent>(OnDisarmed, before: new[] {typeof(StunSystem), typeof(SharedStaminaSystem)});
-
-            SubscribeLocalEvent<HandsComponent, BodyPartAddedEvent>(HandleBodyPartAdded);
-            SubscribeLocalEvent<HandsComponent, BodyPartRemovedEvent>(HandleBodyPartRemoved);
 
             SubscribeLocalEvent<HandsComponent, ComponentGetState>(GetComponentState);
 
@@ -109,70 +105,6 @@ namespace Content.Server.Hands.Systems
 
             args.Handled = true; // no shove/stun.
         }
-
-        // Corvax-Wega-Surgery-Edit-start
-        private void HandleBodyPartAdded(Entity<HandsComponent> ent, ref BodyPartAddedEvent args)
-        {
-            switch (args.Part.Comp.PartType)
-            {
-                case BodyPartType.Arm:
-                    foreach (var (slotId, child) in args.Part.Comp.Children)
-                    {
-                        if (child.Type == BodyPartType.Hand)
-                        {
-                            var containerSlotId = $"body_part_slot_{slotId}";
-                            if (_container.TryGetContainer(args.Part.Owner, containerSlotId, out var container)
-                                && container.ContainedEntities.Any(e => TryComp<BodyPartComponent>(e, out var partComp)
-                                && partComp.PartType == BodyPartType.Hand))
-                            {
-                                var armLocation = args.Part.Comp.Symmetry switch
-                                {
-                                    BodyPartSymmetry.None => HandLocation.Middle,
-                                    BodyPartSymmetry.Left => HandLocation.Left,
-                                    BodyPartSymmetry.Right => HandLocation.Right,
-                                    _ => HandLocation.Middle
-                                };
-
-                                AddHand(ent.AsNullable(), containerSlotId, armLocation);
-                            }
-                        }
-                    }
-                    break;
-
-                case BodyPartType.Hand:
-                    var location = args.Part.Comp.Symmetry switch
-                    {
-                        BodyPartSymmetry.None => HandLocation.Middle,
-                        BodyPartSymmetry.Left => HandLocation.Left,
-                        BodyPartSymmetry.Right => HandLocation.Right,
-                        _ => HandLocation.Middle
-                    };
-
-                    AddHand(ent.AsNullable(), args.Slot, location);
-                    break;
-            }
-        }
-
-        private void HandleBodyPartRemoved(EntityUid uid, HandsComponent component, ref BodyPartRemovedEvent args)
-        {
-            switch (args.Part.Comp.PartType)
-            {
-                case BodyPartType.Arm:
-                    foreach (var (slotId, child) in args.Part.Comp.Children)
-                    {
-                        if (child.Type == BodyPartType.Hand)
-                        {
-                            RemoveHand(uid, $"body_part_slot_{slotId}");
-                        }
-                    }
-                    break;
-
-                case BodyPartType.Hand:
-                    RemoveHand(uid, args.Slot);
-                    break;
-            }
-        }
-        // Corvax-Wega-Surgery-Edit-end
 
         #region interactions
 
