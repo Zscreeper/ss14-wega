@@ -41,6 +41,11 @@ public sealed class HumanoidProfileSystem : EntitySystem
         ent.Comp.Age = profile.Age;
         ent.Comp.Species = profile.Species;
         ent.Comp.Sex = profile.Sex;
+        // Corvax-Wega-start
+        ent.Comp.Status = profile.Status;
+        ent.Comp.Height = profile.Height;
+        ent.Comp.BarkVoice = profile.BarkVoice;
+        // Corvax-Wega-end
         // Corvax-TTS-start
         ent.Comp.Voice = profile.Voice;
         if (TryComp<TTSComponent>(ent, out var _TTSComponent) && _TTSComponent.VoicePrototypeId == "Taskmaster")
