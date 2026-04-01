@@ -94,7 +94,7 @@
         Caustic: 50
     damageUnholy: ## What damage is dealt when a chaplain hits an unholy creature
       types:
-        types: 20
+        Caustic: 20
     # Corvax-Wega-Vampire-end
     failChance: 0
     locPrefix: "necro"

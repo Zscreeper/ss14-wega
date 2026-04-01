@@ -1,3 +1,44 @@
+- type: markingsGroup
+  parent: None
+  id: Ariral
+  limits:
+    enum.HumanoidVisualLayers.Special:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.HeadTop:
+      limit: 1
+      required: true
+      default: [ AriralEars ]
+    enum.HumanoidVisualLayers.Hair:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.FacialHair:
+      limit: 0
+      required: false
+    enum.HumanoidVisualLayers.Snout:
+      limit: 1
+      required: true
+      default: [ AriralWhiskers ]
+    enum.HumanoidVisualLayers.Tail:
+      limit: 1
+      required: true
+      default: [ AriralDefaultTail ]
+    enum.HumanoidVisualLayers.Chest:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.LArm:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.RArm:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.LLeg:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.RLeg:
+      limit: 1
+      required: false
+
 - type: entity
   parent: BaseSpeciesAppearance
   id: AppearanceAriral
@@ -150,37 +191,17 @@
     - AnomalyHost
 
 - type: entity
-  id: OrganAriralStomach
-  parent: OrganAnimalStomach
-  name: stomach
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Metabolizer
-    metabolizerTypes: [ Ariral ]
-
-- type: entity
-  id: OrganAriralLiver
-  parent: OrganAnimalLiver
-  name: liver
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Metabolizer
-    metabolizerTypes: [ Ariral ]
-
-- type: entity
-  id: OrganAriralHeart
-  parent: OrganAnimalHeart
-  name: heart
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Metabolizer
-    metabolizerTypes: [ Ariral ]
-
-- type: entity
   parent: OrganBase
   id: OrganAriral
   abstract: true
   suffix: Ariral
+
+- type: entity
+  id: OrganAriralMetabolizer
+  abstract: true
+  components:
+  - type: Metabolizer
+    metabolizerTypes: [ Human ]
 
 - type: entity
   parent: OrganAriral
@@ -210,12 +231,17 @@
     sprite: _Wega/Mobs/Species/Ariral/parts.rsi
 
 - type: entity
-  parent: [ OrganBaseTorso, OrganAriralExternal ]
+  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganAriralExternal ]
   id: OrganAriralTorso
 
 - type: entity
-  parent: [ OrganBaseHead, OrganAriralExternal ]
+  parent: [ OrganBaseHeadSexed, OrganBaseHead, OrganAriralExternal ]
   id: OrganAriralHead
+  components:
+  - type: VisualOrganMarkings
+    hideableLayers:
+    - enum.HumanoidVisualLayers.Snout
+    - enum.HumanoidVisualLayers.Hair
 
 - type: entity
   parent: [ OrganBaseArmLeft, OrganAriralExternal ]
@@ -256,6 +282,12 @@
 - type: entity
   parent: [ OrganAriralVisual, OrganBaseEyes, OrganAriralInternal ]
   id: OrganAriralEyes
+  components:
+  - type: VisualOrgan
+    layer: enum.HumanoidVisualLayers.Eyes
+    data:
+      sprite: Mobs/Customization/eyes.rsi
+      state: eyes
 
 - type: entity
   parent: [ OrganBaseTongue, OrganAriralInternal ]
@@ -270,9 +302,24 @@
   id: OrganAriralEars
 
 - type: entity
-  parent: [ OrganBaseLungs, OrganAriralInternal ]
+  parent: [ OrganBaseLungs, OrganAriralInternal, OrganAriralMetabolizer ]
   id: OrganAriralLungs
 
 - type: entity
-  parent: [ OrganBaseKidneys, OrganAriralInternal ]
+  parent: [ OrganBaseHeart, OrganAriralInternal, OrganAriralMetabolizer ]
+  id: OrganAriralHeart
+
+- type: entity
+  parent: [ OrganBaseStomach, OrganAriralInternal ]
+  id: OrganAriralStomach
+  components:
+  - type: Metabolizer
+    metabolizerTypes: [ Ariral ]
+
+- type: entity
+  parent: [ OrganBaseLiver, OrganAriralInternal, OrganAriralMetabolizer ]
+  id: OrganAriralLiver
+
+- type: entity
+  parent: [ OrganBaseKidneys, OrganAriralInternal, OrganAriralMetabolizer ]
   id: OrganAriralKidneys

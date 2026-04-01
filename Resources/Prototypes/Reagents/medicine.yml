@@ -146,10 +146,9 @@
   metabolisms:
     Bloodstream:
       effects:
-      - !type:HealthChange  # Corvax-Wega-Change
+      - !type:EvenHealthChange
         damage:
-          groups:  # Corvax-Wega-Change
-            Brute: -2  # Corvax-Wega-Change
+          Brute: -2 # Corvax-Wega-Change
       - !type:HealthChange
         conditions:
         - !type:ReagentCondition
@@ -1197,7 +1196,7 @@
       effects:
       - !type:SatiateThirst
         factor: 3
-    Medicine:
+    Bloodstream:
       effects:
       # Corvax-Wega-BloodCult-start
       - !type:HolyPurification

@@ -1,3 +1,38 @@
+- type: markingsGroup
+  parent: None
+  id: Resomi
+  onlyGroupWhitelisted: true
+  limits:
+    enum.HumanoidVisualLayers.Head:
+      limit: 2
+      required: false
+    enum.HumanoidVisualLayers.Hair:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Tail:
+      limit: 2
+      required: true
+      default: [ ResomiTail, ResomiTailFeathers ]
+    enum.HumanoidVisualLayers.Chest:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.LArm:
+      limit: 1
+      required: false
+      default: [ ResomiLArmFeathers ]
+    enum.HumanoidVisualLayers.RArm:
+      limit: 1
+      required: false
+      default: [ ResomiRArmFeathers ]
+    enum.HumanoidVisualLayers.LLeg:
+      limit: 1
+      required: false
+      default: [ ResomiLLegFeathers ]
+    enum.HumanoidVisualLayers.RLeg:
+      limit: 1
+      required: false
+      default: [ ResomiRLegFeathers  ]
+
 - type: entity
   parent: BaseSpeciesAppearance
   id: AppearanceResomi
@@ -230,6 +265,13 @@
   suffix: Resomi
 
 - type: entity
+  id: OrganResomiMetabolizer
+  abstract: true
+  components:
+  - type: Metabolizer
+    metabolizerTypes: [ Human ]
+
+- type: entity
   parent: OrganResomi
   id: OrganResomiInternal
   abstract: true
@@ -257,12 +299,17 @@
     sprite: _Wega/Mobs/Species/Resomi/parts.rsi
 
 - type: entity
-  parent: [ OrganBaseTorso, OrganResomiExternal ]
+  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganResomiExternal ]
   id: OrganResomiTorso
 
 - type: entity
-  parent: [ OrganBaseHead, OrganResomiExternal ]
+  parent: [ OrganBaseHeadSexed, OrganBaseHead, OrganResomiExternal ]
   id: OrganResomiHead
+  components:
+  - type: VisualOrganMarkings
+    hideableLayers:
+    - enum.HumanoidVisualLayers.Hair
+    - enum.HumanoidVisualLayers.HeadTop
 
 - type: entity
   parent: [ OrganBaseArmLeft, OrganResomiExternal ]
@@ -303,6 +350,12 @@
 - type: entity
   parent: [ OrganResomiVisual, OrganBaseEyes, OrganResomiInternal ]
   id: OrganResomiEyes
+  components:
+  - type: VisualOrgan
+    layer: enum.HumanoidVisualLayers.Eyes
+    data:
+      sprite: _Wega/Mobs/Customization/eyes.rsi
+      state: resomi
 
 - type: entity
   parent: [ OrganBaseTongue, OrganResomiInternal ]
@@ -317,21 +370,21 @@
   id: OrganResomiEars
 
 - type: entity
-  parent: [ OrganBaseLungs, OrganResomiInternal ]
+  parent: [ OrganBaseLungs, OrganResomiInternal, OrganResomiMetabolizer ]
   id: OrganResomiLungs
 
 - type: entity
-  parent: [ OrganBaseHeart, OrganResomiInternal ]
+  parent: [ OrganBaseHeart, OrganResomiInternal, OrganResomiMetabolizer ]
   id: OrganResomiHeart
 
 - type: entity
-  parent: [ OrganBaseStomach, OrganResomiInternal ]
+  parent: [ OrganBaseStomach, OrganResomiInternal, OrganResomiMetabolizer ]
   id: OrganResomiStomach
 
 - type: entity
-  parent: [ OrganBaseLiver, OrganResomiInternal ]
+  parent: [ OrganBaseLiver, OrganResomiInternal, OrganResomiMetabolizer ]
   id: OrganResomiLiver
 
 - type: entity
-  parent: [ OrganBaseKidneys, OrganResomiInternal ]
+  parent: [ OrganBaseKidneys, OrganResomiInternal, OrganResomiMetabolizer ]
   id: OrganResomiKidneys

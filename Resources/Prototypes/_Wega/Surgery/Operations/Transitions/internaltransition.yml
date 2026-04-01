@@ -2144,7 +2144,7 @@
           time: 4
         - tag: [ Ointment ]
           entityPreview: Ointment1
-          rrequiredPart: LegRight
+          requiredPart: LegRight
           damageType: DeepBurns
           action: HealInternalDamage
           sound:
@@ -2182,7 +2182,7 @@
           time: 4
         - tag: [ Ointment ]
           entityPreview: Ointment1
-          rrequiredPart: FootLeft
+          requiredPart: FootLeft
           damageType: DeepBurns
           action: HealInternalDamage
           sound:

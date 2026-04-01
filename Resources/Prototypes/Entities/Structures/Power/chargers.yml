@@ -339,8 +339,7 @@
     damage:
       types:
         Heat: -3
-      groups:
-        Brute: -3
+        Blunt: -3
     slotId: entity_storage
     whitelist:
       components:

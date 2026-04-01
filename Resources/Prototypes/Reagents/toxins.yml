@@ -308,21 +308,19 @@
   - !type:PlantAdjustMutationLevel
     amount: 1
   metabolisms:
-    # Corvax-Wega-Genetics-start
-    Medicine:
-      effects:
-      - !type:ChemMutateDna
-        conditions:
-        - !type:ReagentCondition
-          reagent: UnstableMutagen
-          min: 50
-    # Corvax-Wega-Genetics-end
     Bloodstream:
       effects:
       - !type:HealthChange
         damage:
           types:
             Radiation: 3
+    # Corvax-Wega-Genetics-start
+      - !type:ChemMutateDna
+        conditions:
+        - !type:ReagentCondition
+          reagent: UnstableMutagen
+          min: 50
+    # Corvax-Wega-Genetics-end
 
 - type: reagent
   id: HeartbreakerToxin

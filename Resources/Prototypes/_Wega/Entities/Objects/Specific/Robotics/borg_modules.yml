@@ -165,7 +165,7 @@
         whitelist:
           tags:
           - SlimeRND
-    - item: BorgFireExtinguisher  
+    - item: BorgFireExtinguisher
     - item: KitchenKnife
     - hand:
         emptyRepresentative: BorgIconKitchenIcon
@@ -178,7 +178,7 @@
           - Clothing
   - type: BorgModuleIcon
     icon: { sprite: _Wega/Interface/Actions/actions_borg.rsi, state: slime-module }
-    
+
 - type: entity
   id: BorgModuleDNA
   parent: [ BaseBorgModuleScience, BaseProviderBorgModule ]
@@ -215,7 +215,7 @@
     - item: BorgGeneratorCleanSe
   - type: BorgModuleIcon
     icon: { sprite: _Wega/Interface/Actions/actions_borg.rsi, state: genetic-module }
-    
+
 - type: entity
   id: BorgModuleRobotics
   parent: [ BaseBorgModuleScience, BaseProviderBorgModule ]
@@ -259,12 +259,12 @@
         whitelist:
           components:
           - BorgModule
-    - hand:
-        emptyRepresentative: LeftArmSyntheticPry
-        emptyLabel: borg-slot-bodypart-empty
-        whitelist:
-          tags:
-          - BaseBodyPart
+    # - hand:
+    #     emptyRepresentative: LeftArmSyntheticPry
+    #     emptyLabel: borg-slot-bodypart-empty
+    #     whitelist:
+    #       tags:
+    #       - BaseBodyPart
     - hand:
         emptyRepresentative: PowerCellSmall
         emptyLabel: borg-slot-powercell-empty
@@ -430,7 +430,7 @@
           - Ore
           - ArtifactFragment
           - MagmiteAlloy
-          - Gems 
+          - Gems
     - item: BorgOreBag
   - type: BorgModuleIcon
     icon: { sprite: _Wega/Interface/Actions/actions_borg.rsi, state: pickaxe-common-module }
@@ -510,7 +510,7 @@
     - item: SpeedModeDevice
   - type: BorgModuleIcon
     icon: { sprite: _Wega/Interface/Actions/actions_borg.rsi, state: speed }
-    
+
 - type: entity
   id: BorgModuleCommonMagBoots
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
@@ -560,7 +560,7 @@
           - ChemDispensable
   - type: BorgModuleIcon
     icon: { sprite: _Wega/Interface/Actions/actions_borg.rsi, state: candy-module }
- 
+
 - type: entity
   id: BorgModuleCommonRepeir
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
@@ -584,7 +584,7 @@
     - item: BorgGeneratorNanopast
   - type: BorgModuleIcon
     icon: { sprite: _Wega/Interface/Actions/actions_borg.rsi, state: repeir-module }
-    
+
 - type: entity
   id: BorgModuleMusique
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
@@ -619,7 +619,7 @@
           - Instrument
   - type: BorgModuleIcon
     icon: { sprite: _Wega/Interface/Actions/actions_borg.rsi, state: musical-module }
-    
+
 - type: entity
   id: BorgModuleCleaningCommon
   parent: [ BaseBorgModule, BaseProviderBorgModule ]
@@ -947,7 +947,7 @@
         emptyRepresentative: WeaponBorgTurel
         whitelist:
           tags:
-          - Itemborg  
+          - Itemborg
     - item: TelescopicShieldBorg
   - type: BorgModuleIcon
     icon: { sprite: _Wega/Interface/Actions/actions_borg.rsi, state: lethal-rare }
@@ -993,7 +993,7 @@
           - Ore
           - ArtifactFragment
           - MagmiteAlloy
-          - Gems 
+          - Gems
     - item: BorgOreBagOfHolding
     - item: BorgOreBagOfHolding
   - type: BorgModuleIcon
@@ -1359,7 +1359,7 @@
     - item: SpeedModeDevice
   - type: BorgModuleIcon
     icon: { sprite: _Wega/Interface/Actions/actions_borg.rsi, state: speed_xenoborg }
-    
+
 - type: entity
   parent: [ BaseXenoborgModuleGeneric, BaseProviderBorgModule, BaseXenoborgContraband ]
   id: XenoborgModuleToolMother
@@ -1379,7 +1379,7 @@
     - item: RemoteSignallerAdvanced
   - type: BorgModuleIcon
     icon: { sprite: Interface/Actions/actions_borg.rsi, state: xenoborg-tool-module }
-    
+
 - type: entity
   parent: [ BaseXenoborgModuleStealth, BaseProviderBorgModule, BaseXenoborgContraband ]
   id: XenoborgModuleEMP

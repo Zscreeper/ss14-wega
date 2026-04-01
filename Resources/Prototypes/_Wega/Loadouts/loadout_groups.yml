@@ -1114,8 +1114,8 @@
   - JumpsuitCasualRed
   - JumpskirtCasualRed
   - JumpsuitCasualGreen
-  - JumpskirtCasualGreen 
-  - JumpskirtTurtleneckAquamarine   
+  - JumpskirtCasualGreen
+  - JumpskirtTurtleneckAquamarine
   - JumpsuitTurtleneckAquamarine
   - JumpskirtTurtleneckWhite
   - JumpsuitTurtleneckWhite
@@ -1274,13 +1274,13 @@
   - ShaftMinerJumpsuitExplorerKhaki
   - ShaftMinerJumpskirtExplorerKhaki
 
-- type: loadoutGroup
-  id: ShaftMinerMedicGloves
-  name: loadout-group-shaft-miner-medic-gloves
-  minLimit: 0
-  loadouts:
-  - LatexGloves
-  - NitrileGloves
+# - type: loadoutGroup
+#   id: ShaftMinerMedicGloves
+#   name: loadout-group-shaft-miner-medic-gloves
+#   minLimit: 0
+#   loadouts:
+#   - LatexGloves
+#   - NitrileGloves
 
 # Civilian
 - type: loadoutGroup
@@ -1357,8 +1357,8 @@
   - JumpsuitCasualRed
   - JumpskirtCasualRed
   - JumpsuitCasualGreen
-  - JumpskirtCasualGreen 
-  - JumpskirtTurtleneckAquamarine   
+  - JumpskirtCasualGreen
+  - JumpskirtTurtleneckAquamarine
   - JumpsuitTurtleneckAquamarine
   - JumpskirtTurtleneckWhite
   - JumpsuitTurtleneckWhite

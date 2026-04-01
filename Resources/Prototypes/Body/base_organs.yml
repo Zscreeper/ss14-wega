@@ -1,6 +1,6 @@
 - type: markingsGroup
   id: None
-  onlyGroupWhitelisted: true
+  onlyGroupWhitelisted: false # Corvax-Wega-Edit
 
 - type: markingsGroup
   id: Undergarments

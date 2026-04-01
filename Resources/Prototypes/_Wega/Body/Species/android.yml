@@ -1,3 +1,41 @@
+- type: markingsGroup
+  parent: None
+  id: Android
+  limits:
+    enum.HumanoidVisualLayers.Special:
+      limit: 2
+      required: false
+    enum.HumanoidVisualLayers.Head:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Hair:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.FacialHair:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Snout:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Tail:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Chest:
+      limit: 2
+      required: false
+    enum.HumanoidVisualLayers.LArm:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.RArm:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.LLeg:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.RLeg:
+      limit: 1
+      required: false
+
 - type: entity
   parent: BaseSpeciesAppearance
   id: AppearanceAndroid
@@ -265,70 +303,17 @@
     enabled: false
 
 - type: entity
-  id: OrganAndroidGas
-  parent: [ OrganBaseLungs, OrganAndroidInternal ]
-  name: "android gas system"
-  description: "Collects nitrogen from the atmosphere for cooling system."
-  components:
-  - type: Sprite
-    sprite: _Wega/Mobs/Species/Android/parts.rsi
-    layers:
-      - state: gas_module
-  - type: Lung
-    alert: LowNitrogen
-  - type: Metabolizer
-    removeEmpty: true
-    solutionOnBody: false
-    solution: "Lung"
-    metabolizerTypes: [ Slime ]
-    groups:
-    - id: Gas
-      rateModifier: 100.0
-  - type: SolutionContainerManager
-    solutions:
-      Lung:
-        maxVol: 100.0
-        canReact: false
-  - type: Tag
-    tags:
-      - BaseOrgan
-      - LungsSynthetic
-
-- type: entity
-  id: OrganAndroidTyrium
-  parent: [ OrganBaseHeart, OrganAndroidInternal ]
-  name: "tyrium pump"
-  description: "Pumps blue blood through blue veins."
-  components:
-  - type: Sprite
-    sprite: _Wega/Mobs/Species/Android/parts.rsi
-    layers:
-      - state: tyrium_module
-  - type: Tag
-    tags:
-      - BaseOrgan
-      - HeartSynthetic
-
-- type: entity
-  id: OrganAndroidEyes
-  parent: [ OrganAndroidVisual, OrganBaseEyes, OrganAndroidInternal ]
-  name: "android cameras"
-  description: "High-tech cameras with bluespace neural networks."
-  components:
-  - type: Sprite
-    sprite: _Wega/Mobs/Species/Android/parts.rsi
-    layers:
-      - state: eye_module
-  - type: Tag
-    tags:
-      - BaseOrgan
-      - EyesSynthetic
-
-- type: entity
   parent: OrganBase
   id: OrganAndroid
   abstract: true
   suffix: Android
+
+- type: entity
+  id: OrganAndroidMetabolizer
+  abstract: true
+  components:
+  - type: Metabolizer
+    metabolizerTypes: [ Slime ]
 
 - type: entity
   parent: OrganAndroid
@@ -336,7 +321,7 @@
   abstract: true
   components:
   - type: Sprite
-    sprite: Mobs/Species/Human/organs.rsi # Эй приятель, замени спрайты тут, спасибо
+    sprite: Mobs/Species/Human/organs.rsi
 
 - type: entity
   id: OrganAndroidVisual
@@ -358,12 +343,18 @@
     sprite: _Wega/Mobs/Species/Android/parts.rsi
 
 - type: entity
-  parent: [ OrganBaseTorso, OrganAndroidExternal ]
+  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganAndroidExternal ]
   id: OrganAndroidTorso
 
 - type: entity
-  parent: [ OrganBaseHead, OrganAndroidExternal ]
+  parent: [ OrganBaseHeadSexed, OrganBaseHead, OrganAndroidExternal ]
   id: OrganAndroidHead
+  components:
+  - type: VisualOrganMarkings
+    hideableLayers:
+    - enum.HumanoidVisualLayers.Snout
+    - enum.HumanoidVisualLayers.Hair
+    - enum.HumanoidVisualLayers.FacialHair
 
 - type: entity
   parent: [ OrganBaseArmLeft, OrganAndroidExternal ]
@@ -414,21 +405,65 @@
   id: OrganAndroidEars
 
 - type: entity
-  parent: [ OrganBaseLungs, OrganAndroidInternal, OrganAndroid ]
-  id: OrganAndroidLungs
-
-- type: entity
-  parent: [ OrganBaseHeart, OrganAndroidInternal, OrganAndroid ]
-  id: OrganAndroidHeart
-
-- type: entity
-  parent: [ OrganBaseStomach, OrganAndroidInternal ]
+  parent: [ OrganBaseStomach, OrganAndroidInternal, OrganAndroidMetabolizer ]
   id: OrganAndroidStomach
 
 - type: entity
-  parent: [ OrganBaseLiver, OrganAndroidInternal ]
+  parent: [ OrganBaseLiver, OrganAndroidInternal, OrganAndroidMetabolizer ]
   id: OrganAndroidLiver
 
 - type: entity
-  parent: [ OrganBaseKidneys, OrganAndroidInternal ]
+  parent: [ OrganBaseKidneys, OrganAndroidInternal, OrganAndroidMetabolizer ]
   id: OrganAndroidKidneys
+
+- type: entity
+  parent: [ OrganBaseLungs, OrganAndroidInternal, OrganAndroidMetabolizer ]
+  id: OrganAndroidGas
+  name: android gas system
+  description: Collects nitrogen from the atmosphere for cooling system.
+  components:
+  - type: Sprite
+    sprite: _Wega/Mobs/Species/Android/parts.rsi
+    layers:
+      - state: gas_module
+  - type: Lung
+    alert: LowNitrogen
+  - type: Tag
+    tags:
+      - BaseOrgan
+      - LungsSynthetic
+
+- type: entity
+  parent: [ OrganBaseHeart, OrganAndroidInternal, OrganAndroidMetabolizer ]
+  id: OrganAndroidTyrium
+  name: tyrium pump
+  description: Pumps blue blood through blue veins.
+  components:
+  - type: Sprite
+    sprite: _Wega/Mobs/Species/Android/parts.rsi
+    layers:
+      - state: tyrium_module
+  - type: Tag
+    tags:
+      - BaseOrgan
+      - HeartSynthetic
+
+- type: entity
+  parent: [ OrganAndroidVisual, OrganBaseEyes, OrganAndroidInternal ]
+  id: OrganAndroidEyes
+  name: android cameras
+  description: High-tech cameras with bluespace neural networks.
+  components:
+  - type: Sprite
+    sprite: _Wega/Mobs/Species/Android/parts.rsi
+    layers:
+      - state: eye_module
+  - type: VisualOrgan
+    layer: enum.HumanoidVisualLayers.Eyes
+    data:
+      sprite: Mobs/Customization/eyes.rsi
+      state: eyes
+  - type: Tag
+    tags:
+      - BaseOrgan
+      - EyesSynthetic

@@ -1,5 +1,5 @@
 - type: markingsGroup
-  parent: Undergarments
+  parent: None # Corvax-Wega-Edit
   id: Slime
   limits:
     enum.HumanoidVisualLayers.Hair:

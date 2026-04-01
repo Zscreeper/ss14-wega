@@ -57,19 +57,19 @@
           action: RemoveOrgan
           failureEffect: [ Bleeding, Pain ]
           entityPreview: SentientSlimeCore
-          requiredPart: SlimeCore
+          requiredPart: Heart
           sound:
             path: /Audio/_Wega/Medical/Surgery/hemostat1.ogg
           time: 3
           successChance: 0.8
           conditions:
             - !type:OrganPresentCondition
-              organ: SlimeCore
+              organ: Heart
         - tag: [ SlimeCore ]
           action: InsertOrgan
           failureEffect: [ Pain ]
           entityPreview: SentientSlimeCore
-          requiredPart: SlimeCore
+          requiredPart: Heart
           sound:
             collection: Squishes
           time: 3
@@ -77,7 +77,7 @@
           conditions:
             - !type:OrganPresentCondition
               invert: true
-              organ: SlimeCore
+              organ: Heart
 
         # Легкие
         - tool: [ Hemostat ]

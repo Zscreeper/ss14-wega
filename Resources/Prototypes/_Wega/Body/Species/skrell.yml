@@ -1,3 +1,36 @@
+- type: markingsGroup
+  parent: None
+  id: Skrell
+  onlyGroupWhitelisted: true
+  limits:
+    enum.HumanoidVisualLayers.Head:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.HeadTop:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Hair:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Tail:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Chest:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.LArm:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.RArm:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.LLeg:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.RLeg:
+      limit: 1
+      required: false
+
 - type: entity
   parent: BaseSpeciesAppearance
   id: AppearanceSkrell
@@ -79,228 +112,20 @@
     lowest: MobSkrellkey
 
 - type: entity
-  id: BaseSkrellOrgan
-  parent: BaseItem
-  abstract: true
-  components:
-  - type: Sprite
-    sprite: _Wega/Mobs/Species/Skrell/organ.rsi
-  - type: Organ
-  - type: Extractable
-    grindableSolutionName: organ
-  - type: SolutionContainerManager
-    solutions:
-      organ:
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 10
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
-  - type: FlavorProfile
-    flavors:
-      - people
-  - type: Tag
-    tags:
-      - Meat
-
-- type: entity
-  id: OrganSkrellBrain
-  parent: [BaseSkrellOrgan, OrganHumanBrain]
-  name: brain
-  description: "The source of incredible, unending intelligence. Honk."
-  components:
-  - type: Item
-    size: Small
-    heldPrefix: brain
-  - type: Sprite
-    state: brain
-  - type: SolutionContainerManager
-    solutions:
-      organ:
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 10
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: GreyMatter
-          Quantity: 5
-  - type: Tag
-    tags:
-      - BaseOrgan
-      - Brain
-      - Meat
-
-- type: entity
-  id: OrganSkrellEyes
-  parent: BaseSkrellOrgan
-  name: eyes
-  description: "I see you!"
-  components:
-  - type: Sprite
-    state: eyes
-  - type: Item
-    size: Small
-    heldPrefix: eyes
-  - type: Tag
-    tags:
-      - BaseOrgan
-      - Eyes
-      - Meat
-
-- type: entity
-  id: OrganSkrellLungs
-  parent: BaseSkrellOrgan
-  name: lungs
-  description: "Filters oxygen from an atmosphere, which is then sent into the bloodstream to be used as an electron carrier."
-  components:
-  - type: Sprite
-    state: lungs
-  - type: Item
-    size: Small
-    heldPrefix: lungs
-  - type: Lung
-  - type: Metabolizer
-    removeEmpty: true
-    solutionOnBody: false
-    solution: "Lung"
-    metabolizerTypes: [ Human ]
-    groups:
-    - id: Gas
-      rateModifier: 100.0
-  - type: SolutionContainerManager
-    solutions:
-      organ:
-        reagents:
-        - ReagentId: Nutriment
-          Quantity: 10
-      Lung:
-        maxVol: 100.0
-        canReact: false
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
-  - type: Tag
-    tags:
-      - BaseOrgan
-      - Lungs
-      - Meat
-
-- type: entity
-  id: OrganSkrellHeart
-  parent: BaseSkrellOrgan
-  name: heart
-  description: "I feel bad for the heartless bastard who lost this."
-  components:
-  - type: Sprite
-    state: heart-on
-  - type: Metabolizer
-    maxReagents: 2
-    metabolizerTypes: [Human]
-    groups:
-    - id: Medicine
-    - id: Poison
-    - id: Narcotic
-  - type: Item
-    size: Small
-    heldPrefix: heart
-  - type: Tag
-    tags:
-      - BaseOrgan
-      - Heart
-      - Meat
-
-- type: entity
-  id: OrganSkrellStomach
-  parent: BaseSkrellOrgan
-  name: stomach
-  description: "Gross. This is hard to stomach."
-  components:
-  - type: Sprite
-    state: intestine
-  - type: Item
-    size: Small
-    heldPrefix: intestine
-  - type: SolutionContainerManager
-    solutions:
-      stomach:
-        maxVol: 50
-      food:
-        maxVol: 5
-        reagents:
-        - ReagentId: UncookedAnimalProteins
-          Quantity: 5
-  - type: Stomach
-    updateInterval: 0.25
-  - type: Metabolizer
-    maxReagents: 3
-    metabolizerTypes: [Human]
-    groups:
-    - id: Food
-    - id: Drink
-  - type: Tag
-    tags:
-      - BaseOrgan
-      - Stomach
-      - Meat
-
-- type: entity
-  id: OrganSkrellLiver
-  parent: BaseSkrellOrgan
-  name: liver
-  description: "Pairing suggestion: chianti and fava beans."
-  components:
-  - type: Sprite
-    state: liver
-  - type: Item
-    size: Small
-    heldPrefix: liver
-  - type: Metabolizer
-    maxReagents: 1
-    metabolizerTypes: [Human]
-    groups:
-    - id: Alcohol
-      rateModifier: 0.1
-  - type: Tag
-    tags:
-      - BaseOrgan
-      - Liver
-      - Meat
-
-- type: entity
-  id: OrganSkrellKidneys
-  parent: BaseSkrellOrgan
-  name: kidneys
-  description: "Filters toxins from the bloodstream."
-  components:
-  - type: Sprite
-    state: kidney
-  - type: Item
-    size: Small
-    heldPrefix: kidney
-  - type: Metabolizer
-    maxReagents: 5
-    metabolizerTypes: [Human]
-    removeEmpty: true
-  - type: Tag
-    tags:
-      - BaseOrgan
-      - Kidneys
-      - Meat
-
-- type: entity
   parent: OrganBase
-  id: OrganSkrellVisualBase
+  id: OrganSkrell
   abstract: true
   suffix: Skrell
 
 - type: entity
-  parent: OrganSkrellVisualBase
+  id: OrganSkrellMetabolizer
+  abstract: true
+  components:
+  - type: Metabolizer
+    metabolizerTypes: [ Human ]
+
+- type: entity
+  parent: OrganSkrell
   id: OrganSkrellInternal
   abstract: true
   components:
@@ -319,7 +144,7 @@
       group: Skrell
 
 - type: entity
-  parent: [ OrganSkrellVisualBase, OrganSkrellVisual ]
+  parent: [ OrganSkrell, OrganSkrellVisual ]
   id: OrganSkrellExternal
   abstract: true
   components:
@@ -327,12 +152,17 @@
     sprite: _Wega/Mobs/Species/Skrell/parts.rsi
 
 - type: entity
-  parent: [ OrganBaseTorso, OrganSkrellExternal ]
+  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganSkrellExternal ]
   id: OrganSkrellTorso
 
 - type: entity
-  parent: [ OrganBaseHead, OrganSkrellExternal ]
+  parent: [ OrganBaseHeadSexed, OrganBaseHead, OrganSkrellExternal ]
   id: OrganSkrellHead
+  components:
+  - type: VisualOrganMarkings
+    hideableLayers:
+    - enum.HumanoidVisualLayers.HeadTop
+    - enum.HumanoidVisualLayers.Hair
 
 - type: entity
   parent: [ OrganBaseArmLeft, OrganSkrellExternal ]
@@ -365,3 +195,43 @@
 - type: entity
   parent: [ OrganBaseFootRight, OrganSkrellExternal ]
   id: OrganSkrellFootRight
+
+- type: entity
+  parent: [ OrganBaseBrain, OrganSkrellInternal ]
+  id: OrganSkrellBrain
+
+- type: entity
+  parent: [ OrganSkrellVisual, OrganBaseEyes, OrganSkrellInternal ]
+  id: OrganSkrellEyes
+
+- type: entity
+  parent: [ OrganBaseTongue, OrganSkrellInternal ]
+  id: OrganSkrellTongue
+
+- type: entity
+  parent: [ OrganBaseAppendix, OrganSkrellInternal ]
+  id: OrganSkrellAppendix
+
+- type: entity
+  parent: [ OrganBaseEars, OrganSkrellInternal ]
+  id: OrganSkrellEars
+
+- type: entity
+  parent: [ OrganBaseLungs, OrganSkrellInternal, OrganSkrellMetabolizer ]
+  id: OrganSkrellLungs
+
+- type: entity
+  parent: [ OrganBaseHeart, OrganSkrellInternal, OrganSkrellMetabolizer ]
+  id: OrganSkrellHeart
+
+- type: entity
+  parent: [ OrganBaseStomach, OrganSkrellInternal, OrganSkrellMetabolizer ]
+  id: OrganSkrellStomach
+
+- type: entity
+  parent: [ OrganBaseLiver, OrganSkrellInternal, OrganSkrellMetabolizer ]
+  id: OrganSkrellLiver
+
+- type: entity
+  parent: [ OrganBaseKidneys, OrganSkrellInternal, OrganSkrellMetabolizer ]
+  id: OrganSkrellKidneys

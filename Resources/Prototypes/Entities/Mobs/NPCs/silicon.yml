@@ -227,8 +227,8 @@
     soundHit:
       collection: BananiumHorn
     damage:
-      groups:
-        Brute: 0
+      types:
+        Blunt: 0
 # Corvax-Wega-end
 
 - type: entity
@@ -472,8 +472,6 @@
   - type: Puller
     needsHands: false
 # Corvax-Wega-start
-  - type: Body
-    prototype: HugBot
   - type: ComplexInteraction
   - type: Hands
     showInHands: false

@@ -1,3 +1,42 @@
+- type: markingsGroup
+  parent: None
+  id: Phantom
+  limits:
+    enum.HumanoidVisualLayers.Special:
+      limit: 3
+      required: false
+    enum.HumanoidVisualLayers.Head:
+      limit: 1
+      required: true
+      default: [ PhantomHeadBase ]
+    enum.HumanoidVisualLayers.HeadTop:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Hair:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.FacialHair:
+      limit: 0
+      required: false
+    enum.HumanoidVisualLayers.Snout:
+      limit: 2
+      required: false
+    enum.HumanoidVisualLayers.Chest:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.LArm:
+      limit: 2
+      required: false
+    enum.HumanoidVisualLayers.RArm:
+      limit: 2
+      required: false
+    enum.HumanoidVisualLayers.LLeg:
+      limit: 2
+      required: false
+    enum.HumanoidVisualLayers.RLeg:
+      limit: 2
+      required: false
+
 - type: entity
   parent: BaseSpeciesAppearance
   id: AppearancePhantom
@@ -91,46 +130,17 @@
     baseSprintSpeed: 6
 
 - type: entity
-  id: OrganPhantomStomach
-  parent: OrganAnimalStomach
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: SolutionContainerManager
-    solutions:
-      stomach:
-        maxVol: 50
-  - type: Metabolizer
-    maxReagents: 1
-    metabolizerTypes: [Human]
-    groups:
-    - id: Food
-      rateModifier: 2.0
-    - id: Drink
-      rateModifier: 2.0
-
-- type: entity
-  id: OrganPhantomHeart
-  parent: OrganAnimalHeart
-  components:
-  - type: Metabolizer
-    maxReagents: 1
-    metabolizerTypes: [Human]
-    groups:
-    - id: Medicine
-      rateModifier: 2.0
-    - id: Poison
-      rateModifier: 2.0
-    - id: Narcotic
-      rateModifier: 2.0
-  - type: Sprite
-    sprite: _Wega/Mobs/Species/Phantom/organ.rsi
-    state: heart-on
-
-- type: entity
   parent: OrganBase
   id: OrganPhantom
   abstract: true
   suffix: Phantom
+
+- type: entity
+  id: OrganPhantomMetabolizer
+  abstract: true
+  components:
+  - type: Metabolizer
+    metabolizerTypes: [ Human ]
 
 - type: entity
   parent: OrganPhantom
@@ -160,12 +170,18 @@
     sprite: _Wega/Mobs/Species/Phantom/parts.rsi
 
 - type: entity
-  parent: [ OrganBaseTorso, OrganPhantomExternal ]
+  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganPhantomExternal ]
   id: OrganPhantomTorso
 
 - type: entity
   parent: [ OrganBaseHead, OrganPhantomExternal ]
   id: OrganPhantomHead
+  components:
+  - type: VisualOrganMarkings
+    hideableLayers:
+    - enum.HumanoidVisualLayers.Hair
+    - enum.HumanoidVisualLayers.FacialHair
+    - enum.HumanoidVisualLayers.Snout
 
 - type: entity
   parent: [ OrganBaseArmLeft, OrganPhantomExternal ]
@@ -206,6 +222,12 @@
 - type: entity
   parent: [ OrganPhantomVisual, OrganBaseEyes, OrganPhantomInternal ]
   id: OrganPhantomEyes
+  components:
+  - type: VisualOrgan
+    layer: enum.HumanoidVisualLayers.Eyes
+    data:
+      sprite: Mobs/Customization/eyes.rsi
+      state: eyes
 
 - type: entity
   parent: [ OrganBaseTongue, OrganPhantomInternal ]
@@ -220,13 +242,21 @@
   id: OrganPhantomEars
 
 - type: entity
-  parent: [ OrganBaseLungs, OrganPhantomInternal ]
+  parent: [ OrganBaseLungs, OrganPhantomInternal, OrganPhantomMetabolizer ]
   id: OrganPhantomLungs
 
 - type: entity
-  parent: [ OrganBaseLiver, OrganPhantomInternal ]
+  parent: [ OrganBaseHeart, OrganPhantomInternal, OrganPhantomMetabolizer ]
+  id: OrganPhantomHeart
+
+- type: entity
+  parent: [ OrganBaseStomach, OrganPhantomInternal, OrganPhantomMetabolizer ]
+  id: OrganPhantomStomach
+
+- type: entity
+  parent: [ OrganBaseLiver, OrganPhantomInternal, OrganPhantomMetabolizer ]
   id: OrganPhantomLiver
 
 - type: entity
-  parent: [ OrganBaseKidneys, OrganPhantomInternal ]
+  parent: [ OrganBaseKidneys, OrganPhantomInternal, OrganPhantomMetabolizer ]
   id: OrganPhantomKidneys

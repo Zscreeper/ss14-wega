@@ -1,3 +1,45 @@
+- type: markingsGroup
+  parent: None
+  id: Demon
+  limits:
+    enum.HumanoidVisualLayers.Special:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.HeadTop:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.HeadSide:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Hair:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.FacialHair:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.Snout:
+      limit: 2
+      required: false
+    enum.HumanoidVisualLayers.Tail:
+      limit: 1
+      required: true
+      default: [ DemomTail ]
+    enum.HumanoidVisualLayers.Chest:
+      limit: 4
+      required: false
+    enum.HumanoidVisualLayers.LArm:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.RArm:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.LLeg:
+      limit: 1
+      required: false
+    enum.HumanoidVisualLayers.RLeg:
+      limit: 1
+      required: false
+
 - type: entity
   parent: BaseSpeciesAppearance
   id: AppearanceDemon
@@ -85,40 +127,23 @@
   - type: PassiveDamage
     allowedStates:
     - Alive
-    damageCap: 50
     damage:
       types:
         Heat: -0.1
-      groups:
-        Brute: -0.1
-
-- type: entity
-  id: OrganDemonStomach
-  parent: OrganAnimalStomach
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: SolutionContainerManager
-    solutions:
-      stomach:
-        maxVol: 50
-
-- type: entity
-  id: OrganDemonHeart
-  parent: OrganAnimalHeart
-  components:
-  - type: Metabolizer
-    maxReagents: 2
-    metabolizerTypes: [Human]
-    groups:
-    - id: Medicine
-    - id: Poison
-    - id: Narcotic
+        Blunt: -0.1
 
 - type: entity
   parent: OrganBase
   id: OrganDemon
   abstract: true
   suffix: Demon
+
+- type: entity
+  id: OrganDemonMetabolizer
+  abstract: true
+  components:
+  - type: Metabolizer
+    metabolizerTypes: [ Animal ]
 
 - type: entity
   parent: OrganDemon
@@ -148,12 +173,19 @@
     sprite: _Wega/Mobs/Species/Demon/parts.rsi
 
 - type: entity
-  parent: [ OrganBaseTorso, OrganDemonExternal ]
+  parent: [ OrganBaseTorsoSexed, OrganBaseTorso, OrganDemonExternal ]
   id: OrganDemonTorso
 
 - type: entity
-  parent: [ OrganBaseHead, OrganDemonExternal ]
+  parent: [ OrganBaseHeadSexed, OrganBaseHead, OrganDemonExternal ]
   id: OrganDemonHead
+  components:
+  - type: VisualOrganMarkings
+    hideableLayers:
+    - enum.HumanoidVisualLayers.Snout
+    - enum.HumanoidVisualLayers.HeadSide
+    - enum.HumanoidVisualLayers.Hair
+    - enum.HumanoidVisualLayers.FacialHair
 
 - type: entity
   parent: [ OrganBaseArmLeft, OrganDemonExternal ]
@@ -194,6 +226,12 @@
 - type: entity
   parent: [ OrganDemonVisual, OrganBaseEyes, OrganDemonInternal ]
   id: OrganDemonEyes
+  components:
+  - type: VisualOrgan
+    layer: enum.HumanoidVisualLayers.Eyes
+    data:
+      sprite: Mobs/Customization/eyes.rsi
+      state: eyes
 
 - type: entity
   parent: [ OrganBaseTongue, OrganDemonInternal ]
@@ -208,13 +246,21 @@
   id: OrganDemonEars
 
 - type: entity
-  parent: [ OrganBaseLungs, OrganDemonInternal ]
+  parent: [ OrganBaseLungs, OrganDemonInternal, OrganDemonMetabolizer ]
   id: OrganDemonLungs
 
 - type: entity
-  parent: [ OrganBaseLiver, OrganDemonInternal ]
+  parent: [ OrganBaseHeart, OrganDemonInternal, OrganDemonMetabolizer ]
+  id: OrganDemonHeart
+
+- type: entity
+  parent: [ OrganBaseStomach, OrganDemonInternal, OrganDemonMetabolizer ]
+  id: OrganDemonStomach
+
+- type: entity
+  parent: [ OrganBaseLiver, OrganDemonInternal, OrganDemonMetabolizer ]
   id: OrganDemonLiver
 
 - type: entity
-  parent: [ OrganBaseKidneys, OrganDemonInternal ]
+  parent: [ OrganBaseKidneys, OrganDemonInternal, OrganDemonMetabolizer ]
   id: OrganDemonKidneys

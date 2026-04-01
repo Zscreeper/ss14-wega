@@ -1,5 +1,5 @@
 - type: markingsGroup
-  parent: Undergarments
+  parent: None # Corvax-Wega-Edit
   id: Moth
   onlyGroupWhitelisted: true
   limits:
