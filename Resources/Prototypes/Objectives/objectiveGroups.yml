@@ -83,7 +83,7 @@
     FlippoEngravedLighterStealObjective: 0.5
     ClothingHeadHatWardenStealObjective: 1
     WantedListCartridgeStealObjective: 1
-    ClothingOuterHardsuitVoidParamedStealObjective: 1   #med
+    # ClothingOuterHardsuitVoidParamedStealObjective: 1   #med # Corvax-Wega-Edit
     MedicalTechFabCircuitboardStealObjective: 1
     FireAxeStealObjective: 1                            #eng
     AmePartFlatpackStealObjective: 1
